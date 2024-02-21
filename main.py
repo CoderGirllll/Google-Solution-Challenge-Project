@@ -34,9 +34,15 @@ y_pred = model.predict(X_test)
 mae = mean_absolute_error(y_test, y_pred)
 print(f"Mean Absolute Error on Test Set: {mae}")
 
-# Now, you can use the trained model to predict the amount of medicines for the coming month
-# For example, if you have new data for the coming month, you can use model.predict(new_data) to get predictions.
-# Make sure to preprocess the new data in the same way as you did for the training data.
+# Prepare a DataFrame with predictions and medicine information
+predictions_df = pd.DataFrame({"Medicine": df.loc[X_test.index, "Medicine"],
+                                "Dosage": df.loc[X_test.index, "Dosage"],
+                                "Actual_Amount": y_test,
+                                "Predicted_Amount": y_pred.flatten()})
+
+# Save the predictions to a CSV file
+predictions_df.to_csv("predictions.csv", index=False)
+print("Predictions saved to 'predictions.csv'")
 
 # Save the trained model for future use
 model.save("medicine_amount_prediction_model.h5")
